@@ -35,7 +35,6 @@ public class ConsumerStringExample {
                 var records = consumer.poll(Duration.ofMillis(1000));
                 if (!records.isEmpty())
                     records.forEach(this::PRESENT_RECORDS);
-                LOG.warn("No message found");
             }
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
