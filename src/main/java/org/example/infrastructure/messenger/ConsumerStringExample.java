@@ -31,11 +31,12 @@ public class ConsumerStringExample {
                 ConsumerStringProperties.setup()
         )) {
             consumer.subscribe(Collections.singletonList("TOPIC"));
-
-            var records = consumer.poll(Duration.ofMillis(100));
-            if (records.isEmpty())
-                throw new RuntimeException("No message found.");
-            records.forEach(this::PRESENT_RECORDS);
+            for (int i = 0; i < 100; i++) {
+                var records = consumer.poll(Duration.ofMillis(1000));
+                if (!records.isEmpty())
+                    records.forEach(this::PRESENT_RECORDS);
+                LOG.warn("No message found");
+            }
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
         } finally {
