@@ -3,25 +3,20 @@ package org.example.infrastructure.messenger;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.example.infrastructure.configuration.ProducerStringProperties;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.example.infrastructure.configuration.ProducerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-public class ProducerStringExample {
-    private final Logger LOG = LoggerFactory.getLogger(ProducerStringExample.class);
-
-    private final ProducerRecord<String, String> RECORD = new ProducerRecord<>(
-            "TOPIC",
-            "KEY",
-            String.valueOf(Math.random() * 1000 + 1).split("\\.")[0]
-    );
+public class ProducerExample {
+    private final Logger LOG = LoggerFactory.getLogger(ProducerExample.class);
 
     private final Callback CALLBACK = (data, ex) -> {
         if (ex != null)
             throw new RuntimeException("Error to produce message.");
-        LOG.info(" ----- Producer Example Output ----- ");
+        LOG.info("\n\n ----- Producer Example Output ----- ");
         LOG.info("topic: " + data.topic()
                 + ", partitions: " + data.partition()
                 + ", offset: " + data.offset()
@@ -31,11 +26,27 @@ public class ProducerStringExample {
         );
     };
 
-    public void execute() {
+    private ProducerRecord<String, String> record(
+            final String topic,
+            final String key,
+            final String value
+    ) {
+        return new ProducerRecord<>(topic, key, value);
+    }
+
+    public void execute(
+            final String topic,
+            final String key,
+            final String value
+    ) {
         try (var producer = new KafkaProducer<String, String>(
-                ProducerStringProperties.setup()
+                ProducerProperties.setup(
+                        StringSerializer.class.getName(),
+                        StringSerializer.class.getName()
+                )
         )) {
-            producer.send(RECORD, CALLBACK).get();
+            producer.send(record(topic, key, value), CALLBACK).get();
+
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
         } finally {

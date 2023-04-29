@@ -1,13 +1,15 @@
 package org.example.infrastructure.configuration;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.example.infrastructure.messenger.ConsumerStringExample;
 
 import java.util.Properties;
 
-public class ConsumerStringProperties {
-    public static Properties setup() {
+public class ConsumerProperties {
+    public static Properties setup(
+            final String keySerializer,
+            final String valueSerializer,
+            final String groupId
+    ) {
         var properties = new Properties();
         properties.setProperty(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -15,15 +17,19 @@ public class ConsumerStringProperties {
         );
         properties.setProperty(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class.getName()
+                keySerializer
         );
         properties.setProperty(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class.getName()
+                valueSerializer
         );
         properties.setProperty(
                 ConsumerConfig.GROUP_ID_CONFIG,
-                ConsumerStringExample.class.getSimpleName()
+                groupId
+        );
+        properties.setProperty(
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG,
+                "1"
         );
         return properties;
     }
