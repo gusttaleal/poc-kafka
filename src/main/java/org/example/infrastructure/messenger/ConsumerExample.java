@@ -3,6 +3,7 @@ package org.example.infrastructure.messenger;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.example.core.domain.Customer;
 import org.example.infrastructure.configuration.ConsumerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.util.Date;
 public class ConsumerExample {
     private final Logger LOG = LoggerFactory.getLogger(ConsumerExample.class);
 
-    private void PRESENT_RECORDS(ConsumerRecord<String, String> data) {
+    private void presentRecords(ConsumerRecord<String, String> data) {
         LOG.info("\n\n ----- Consumer Example Output ----- ");
         LOG.info("topic: " + data.topic()
                 + ", partitions: " + data.partition()
@@ -25,6 +26,7 @@ public class ConsumerExample {
                 + ", headers: " + data.headers()
                 + ", leaderEpoch: " + data.leaderEpoch()
         );
+        LOG.info("\nCustomer: " + Customer.stringToObject(data.value()).getIdentificationDocument());
     }
 
     public void execute(final String topic) {
@@ -39,7 +41,7 @@ public class ConsumerExample {
             for (int i = 0; i < 30; i++) {
                 var records = consumer.poll(Duration.ofMillis(1000));
                 if (!records.isEmpty())
-                    records.forEach(this::PRESENT_RECORDS);
+                    records.forEach(this::presentRecords);
             }
 
         } catch (Exception ex) {

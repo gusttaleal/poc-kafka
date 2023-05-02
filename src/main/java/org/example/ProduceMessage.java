@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.core.domain.Customer;
 import org.example.infrastructure.messenger.ProducerExample;
 
 import java.util.UUID;
@@ -11,7 +12,12 @@ public class ProduceMessage {
         producer.execute(
                 "TOPIC",
                 UUID.randomUUID().toString(),
-                String.valueOf(Math.random() * 1000 + 1).split("\\.")[0]
+                Customer.builder()
+                        .birthDate("01/01/2000")
+                        .fullName("Gustavo Leal")
+                        .identificationDocument("123.456.789-00")
+                        .build()
+                        .toString()
         );
     }
 }
