@@ -3,7 +3,7 @@ package org.example.infrastructure.messenger;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.example.core.domain.Customer;
+import org.example.core.utils.StringToObject;
 import org.example.infrastructure.configuration.ConsumerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,13 @@ public class ConsumerExample {
                 + ", headers: " + data.headers()
                 + ", leaderEpoch: " + data.leaderEpoch()
         );
-        LOG.info("\nCustomer: " + Customer.stringToObject(data.value()).getIdentificationDocument());
+        try {
+            LOG.info("\nClass: " + StringToObject.execute(data.value()) + "\n");
+
+        } catch (Exception ex) {
+            LOG.error("Error while using the 'execute' method of 'StringToObject' class. "
+                    + "Error: {}", String.valueOf(ex));
+        }
     }
 
     public void execute(final String topic) {
@@ -45,7 +51,8 @@ public class ConsumerExample {
             }
 
         } catch (Exception ex) {
-            LOG.error(ex.getMessage());
+            LOG.error("Error while run the 'subscribe' method of 'KafkaConsumer' class. "
+                    + "Error: {}", String.valueOf(ex));
         } finally {
             LOG.info(" ----- Consumer Ended ----- ");
         }

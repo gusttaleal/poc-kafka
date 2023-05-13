@@ -23,6 +23,7 @@ public class ProducerExample {
                 + ", timestamp: " + new Date(data.timestamp())
                 + ", key size: " + data.serializedKeySize()
                 + ", value size: " + data.serializedValueSize()
+                + "\n"
         );
     };
 

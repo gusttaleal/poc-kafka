@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PropertiesMapperTest {
+class MapperTest {
     @Test
     @DisplayName("should validate mapper")
     void validateMapper() {
@@ -29,7 +29,7 @@ class PropertiesMapperTest {
                 .replace(")", "")
                 .split(", ");
 
-        var actual = PropertiesMapper.execute(properties);
+        var actual = Mapper.keyAndValue(properties);
 
         assertEquals(expected, actual);
     }

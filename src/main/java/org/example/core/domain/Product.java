@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
-    private String fullName;
-    private String birthDate;
-    private String identificationDocument;
+public class Product {
+    private String id;
+    private String productName;
+    private String expirationDate;
 }
